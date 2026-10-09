@@ -1,7 +1,7 @@
 # MiniMessage-Format. Platzhalter: <player> <money> <playtime> <kills> <deaths>
 title: "<gold><bold>MEIN SERVER"
 update-interval-ticks: 20
-currency-symbol: "€"
+currency-symbol: "$"
 # Maximal 15 Zeilen
 lines:
   - ""

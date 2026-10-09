@@ -36,6 +36,7 @@ public class BoardManager implements Listener {
     private final MiniMessage mm = MiniMessage.miniMessage();
     private final Map<UUID, Scoreboard> boards = new HashMap<>();
     private final Set<UUID> disabled = new HashSet<>();
+    private final Set<UUID> warned = new HashSet<>();
 
     private BukkitTask task;
     private Component title = Component.empty();
@@ -91,7 +92,12 @@ public class BoardManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if (!disabled.contains(e.getPlayer().getUniqueId())) create(e.getPlayer());
+        Player p = e.getPlayer();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (p.isOnline() && !disabled.contains(p.getUniqueId()) && !boards.containsKey(p.getUniqueId())) {
+                create(p);
+            }
+        }, 10L);
     }
 
     @EventHandler
@@ -121,12 +127,27 @@ public class BoardManager implements Listener {
     }
 
     private void updateAll() {
-        for (Player p : Bukkit.getOnlinePlayers()) update(p);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            try {
+                update(p);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Fehler beim Aktualisieren für " + p.getName() + ": " + ex);
+            }
+        }
     }
 
     private void update(Player p) {
         Scoreboard sb = boards.get(p.getUniqueId());
         if (sb == null) return;
+
+        if (p.getScoreboard() != sb) {
+            if (warned.add(p.getUniqueId())) {
+                plugin.getLogger().warning("Das Scoreboard von " + p.getName()
+                        + " wurde von einem anderen Plugin ersetzt - ich setze es zurück. "
+                        + "Bitte prüfe, welches andere Plugin ein Scoreboard anzeigt.");
+            }
+            p.setScoreboard(sb);
+        }
 
         double hours = PLAYTIME_STAT == null ? 0.0 : p.getStatistic(PLAYTIME_STAT) / 20.0 / 3600.0;
         String money = String.format(Locale.GERMANY, "%,.2f", plugin.getMoney(p))
