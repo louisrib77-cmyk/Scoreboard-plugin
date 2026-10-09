@@ -1,0 +1,13 @@
+name: LouisScoreboard
+version: '1.0.0'
+main: de.louis.scoreboard.LouisScoreboard
+api-version: '26.2'
+softdepend: [Vault]
+commands:
+  sb:
+    description: Scoreboard ein-/ausschalten oder neu laden
+    usage: /sb [reload]
+permissions:
+  louisscoreboard.reload:
+    description: Config neu laden
+    default: op

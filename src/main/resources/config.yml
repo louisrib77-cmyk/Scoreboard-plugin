@@ -1,0 +1,14 @@
+# MiniMessage-Format. Platzhalter: <player> <money> <playtime> <kills> <deaths>
+title: "<gold><bold>MEIN SERVER"
+update-interval-ticks: 20
+currency-symbol: "€"
+# Maximal 15 Zeilen
+lines:
+  - ""
+  - "<gray>Spieler: <white><player>"
+  - "<gray>Geld: <gold><money>"
+  - "<gray>Spielzeit: <aqua><playtime> Std"
+  - "<gray>Kills: <green><kills>"
+  - "<gray>Tode: <red><deaths>"
+  - ""
+  - "<yellow>mein.server.de"
